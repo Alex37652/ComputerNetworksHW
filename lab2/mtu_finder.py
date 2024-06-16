@@ -1,15 +1,17 @@
 import sys
 import ping3
 
+
 def is_host_reachable(host):
     try:
         response_time = ping3.ping(host, timeout=2)
-        if response_time is not None:
+        if (response_time is not None) and (response_time is not False):
             return True
         return False
     except Exception as e:
         print(f"Ошибка при проверке доступности хоста: {e}")
         return False
+
 
 def find_min_mtu(host):
     min_mtu = 28  # Minimum size for IP header + ICMP header
@@ -23,7 +25,7 @@ def find_min_mtu(host):
 
         try:
             response_time = ping3.ping(host, size=payload_size, timeout=2)
-            if response_time is not None:
+            if (response_time is not None) and (response_time is not False):
                 icmp_blocked = False
                 found_mtu = mid_mtu
                 min_mtu = mid_mtu + 1
@@ -38,6 +40,7 @@ def find_min_mtu(host):
         return None
 
     return found_mtu
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
